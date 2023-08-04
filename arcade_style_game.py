@@ -26,20 +26,20 @@ SCREEN_HEIGHT = 1080
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.image.load("Fly2.png").convert()
+        self.surf = pygame.image.load("starship.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
 
     # Move the sprite based on user keypressed
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
-            self.rect.move_ip(0, -10)
+            self.rect.move_ip(0, -15)
         if pressed_keys[K_DOWN]:
-            self.rect.move_ip(0, 10)
+            self.rect.move_ip(0, 15)
         if pressed_keys[K_LEFT]:
-            self.rect.move_ip(-10, 0)
+            self.rect.move_ip(-15, 0)
         if pressed_keys[K_RIGHT]:
-            self.rect.move_ip(10, 0)
+            self.rect.move_ip(15, 0)
 
         # Keep player on the screen 
         if self.rect.left < 0:
@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.surf = pygame.image.load("Slide2.png").convert()
+        self.surf = pygame.image.load("enemy.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         # The starting position is randomly generated, as is the speed
         self.rect = self.surf.get_rect(
@@ -79,8 +79,9 @@ class Enemy(pygame.sprite.Sprite):
 class Cloud(pygame.sprite.Sprite):
     def __init__(self):
         super(Cloud, self).__init__()
-        self.surf = pygame.image.load("Cloud.png").convert()
+        self.surf = pygame.image.load("asteroid.png").convert()
         self.surf.set_colorkey((0, 0, 0), RLEACCEL)
+
         # The starting position is randomly generated
         self.rect = self.surf.get_rect(
             center=(
@@ -95,6 +96,8 @@ class Cloud(pygame.sprite.Sprite):
         self.rect.move_ip(-5, 0)
         if self.rect.right < 0:
             self.kill()
+
+background = pygame.image.load("space.png")
 
 # Setup for sounds. Defaults are good 
 pygame.mixer.init()
@@ -111,7 +114,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Create a custom event for adding a new enemy 
 ADDENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(ADDENEMY, 250)
+pygame.time.set_timer(ADDENEMY, 500)
 ADDCLOUD = pygame.USEREVENT + 2
 pygame.time.set_timer(ADDCLOUD, 1000)
 
@@ -129,7 +132,7 @@ all_sprites.add(player)
 # Load and play background music
 # Sound source: http://ccmixter.org/files/Apoxode/59262
 # License: https://creativecommons.org/licenses/by/3.0/
-pygame.mixer.music.load("JingleBells.mp3")
+pygame.mixer.music.load("BossMain.wav")
 pygame.mixer.music.play(loops=-1)
 
 # Variable to keep the main loop running
@@ -171,7 +174,8 @@ while running:
     clouds.update()
 
     # Fill the screen with black
-    screen.fill((135, 206, 250))
+    # screen.fill((255, 255, 255))
+    screen.blit(background, (0, 0))
 
     # Drawn all sprites
     for entity in all_sprites:
