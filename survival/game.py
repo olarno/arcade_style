@@ -1,7 +1,7 @@
 import pygame
 
 from models import Player, Enemy
-from utils import  get_random_position, load_sprite
+from utils import get_random_velocity, get_random_position, load_sprite
 
 class Survival:
     MIN_ENEMY_DISTANCE = 250
@@ -42,21 +42,33 @@ class Survival:
 
         is_key_pressed = pygame.key.get_pressed()
 
-        if is_key_pressed[pygame.K_RIGHT]:
-            self.player.rotate(clockwise=True)
-        elif is_key_pressed[pygame.K_LEFT]:
-            self.player.rotate(clockwise=False)
-        if is_key_pressed[pygame.K_UP]:
-            self.player.accelerate()
-        if is_key_pressed[pygame.K_DOWN]:
-            self.player.decelerate()
+        if self.player:
+            if is_key_pressed[pygame.K_RIGHT]:
+                self.player.rotate(clockwise=True)
+            elif is_key_pressed[pygame.K_LEFT]:
+                self.player.rotate(clockwise=False)
+            if is_key_pressed[pygame.K_UP]:
+                self.player.accelerate()
+            if is_key_pressed[pygame.K_DOWN]:
+                self.player.decelerate()
 
     def _get_game_object(self):
-        return [*self.enemies, self.player]
+        games_objects = [*self.enemies]
+
+        if self.player:
+            games_objects.append(self.player)
+        
+        return games_objects
     
     def _process_game_logic(self):
         for game_object in self._get_game_object():
             game_object.move(self.screen)
+
+        if self.player:
+            for enemy in self.enemies:
+                if enemy.collides_with(self.player):
+                    self.player = None
+                    break
 
     def _draw(self):
         self.screen.blit(self.background, (0, 0))

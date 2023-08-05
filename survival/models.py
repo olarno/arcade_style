@@ -1,7 +1,7 @@
 from pygame.math import Vector2
 from pygame.transform import rotozoom
 
-from utils import load_sprite, wrap_position
+from utils import get_random_velocity, load_sprite, wrap_position
 
 UP = Vector2(0, -1)
 
@@ -50,4 +50,4 @@ class Player(GameObject):
 
 class Enemy(GameObject):
     def __init__(self, position):
-        super().__init__(position, load_sprite("enemy_1"), (0, 0))
+        super().__init__(position, load_sprite("enemy_1"), get_random_velocity(1, 3))
