@@ -1,7 +1,7 @@
 import pygame
 
 from models import Player, Enemy
-from utils import get_random_velocity, get_random_position, load_sprite
+from utils import get_random_position, load_sprite, print_text
 
 class Survival:
     MIN_ENEMY_DISTANCE = 250
@@ -10,6 +10,9 @@ class Survival:
         self.screen = pygame.display.set_mode((800, 600))
         self.background = load_sprite("land_1", False)
         self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(None, 64)
+        self.message = ""
+
         self.enemies = []
         self.bullets = []
         self.player = Player((400, 300), self.bullets.append)
@@ -75,23 +78,31 @@ class Survival:
             for enemy in self.enemies:
                 if enemy.collides_with(self.player):
                     self.player = None
+                    self.message = "Game Over!"
                     break
+
         for bullet in self.bullets[:]:
             for enemy in self.enemies[:]:
                 if enemy.collides_with(bullet):
                     self.enemies.remove(enemy)
                     self.bullets.remove(bullet)
                     break
-                
+
         for bullet in self.bullets[:]:
             if not self.screen.get_rect().collidepoint(bullet.position):
                 self.bullets.remove(bullet)
+
+        if not self.enemies and self.player:
+            self.message = "Houra!"
 
     def _draw(self):
         self.screen.blit(self.background, (0, 0))
 
         for game_object in self._get_game_object():
             game_object.draw(self.screen)
+
+        if self.message:
+            print_text(self.screen, self.message, self.font)
         
         pygame.display.flip()
         self.clock.tick(60)
