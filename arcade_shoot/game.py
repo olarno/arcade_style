@@ -100,7 +100,7 @@ class Cloud(pygame.sprite.Sprite):
 background = pygame.image.load("space.png")
 
 # Setup for sounds. Defaults are good 
-pygame.mixer.init()
+# pygame.mixer.init()
 
 # Initialize pygame
 pygame.init()
@@ -132,8 +132,8 @@ all_sprites.add(player)
 # Load and play background music
 # Sound source: http://ccmixter.org/files/Apoxode/59262
 # License: https://creativecommons.org/licenses/by/3.0/
-pygame.mixer.music.load("BossMain.wav")
-pygame.mixer.music.play(loops=-1)
+# pygame.mixer.music.load("BossMain.wav")
+# pygame.mixer.music.play(loops=-1)
 
 # Variable to keep the main loop running
 running = True
@@ -195,5 +195,5 @@ while running:
     clock.tick(30)
 
 # All done! Stop and quit the mixer.
-pygame.mixer.music.stop()
-pygame.mixer.quit()
+# pygame.mixer.music.stop()
+# pygame.mixer.quit()
