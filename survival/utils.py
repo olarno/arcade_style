@@ -20,8 +20,8 @@ def wrap_position(position, surface):
 
 def get_random_position(surface):
     return Vector2(
-        random.randrange(surface.get_width()),
-        random.randrange(surface.get_height()),
+        surface.get_width(),
+        surface.get_height(),
     )
 
 def get_random_velocity(min_speed, max_speed):

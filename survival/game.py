@@ -17,7 +17,10 @@ class Survival:
         self.bullets = []
         self.player = Player((400, 300), self.bullets.append)
 
-        for _ in range(6):
+        self.shooting = pygame.USEREVENT + 1
+        pygame.time.set_timer( self.shooting, 50)
+
+        for _ in range(12):
             while True:
                 position = get_random_position(self.screen)
                 if (
@@ -45,8 +48,7 @@ class Survival:
                 quit() 
             elif (
                 self.player
-                and event.type == pygame.KEYDOWN
-                and event.key == pygame.K_SPACE
+                and event.type == self.shooting
             ):
                 self.player.shoot()
 
@@ -57,10 +59,7 @@ class Survival:
                 self.player.rotate(clockwise=True)
             elif is_key_pressed[pygame.K_LEFT]:
                 self.player.rotate(clockwise=False)
-            if is_key_pressed[pygame.K_UP]:
-                self.player.accelerate()
-            if is_key_pressed[pygame.K_DOWN]:
-                self.player.decelerate()
+     
 
     def _get_game_object(self):
         games_objects = [*self.enemies, *self.bullets]

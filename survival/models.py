@@ -45,12 +45,6 @@ class Player(GameObject):
         blit_position = self.position - rotated_surface_size * 0.5
         surface.blit(rotated_surface, blit_position)
 
-    def accelerate(self):
-        self.velocity += self.direction * self.ACCELERATION
-
-    def decelerate(self):
-        self.velocity -= self.direction * self.ACCELERATION
-
     def shoot(self):
         bullet_velocity = self.direction * self.BULLET_SPEED + self.velocity
         bullet = Bullet(self.position, bullet_velocity)
@@ -59,6 +53,9 @@ class Player(GameObject):
 class Enemy(GameObject):
     def __init__(self, position):
         super().__init__(position, load_sprite("enemy_1"), get_random_velocity(1, 3))
+
+    def move(self, surface):
+        self.position = wrap_position(self.position + self.velocity, surface)
 
 class Bullet(GameObject):
     def __init__(self, position, velocity):
