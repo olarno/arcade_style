@@ -52,6 +52,7 @@ class Player(GameObject):
 
 class Enemy(GameObject):
     def __init__(self, position):
+        self.direction = Vector2(400, 300)
         super().__init__(position, load_sprite("enemy_1"), get_random_velocity(1, 3))
 
     def move(self, surface):
@@ -59,7 +60,8 @@ class Enemy(GameObject):
 
 class Bullet(GameObject):
     def __init__(self, position, velocity):
-        super().__init__(position, load_sprite("beam_blue"), velocity)
+        self.direction = Vector2(UP)
+        super().__init__(position, load_sprite("water"), velocity)
 
     def move(self, surface):
         self.position = self.position + self.velocity

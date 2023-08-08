@@ -8,6 +8,7 @@ class Survival:
     def __init__(self):
         self._init_pygame()
         self.screen = pygame.display.set_mode((800, 600))
+        self.display_scroll = [0, 0]
         self.background = load_sprite("land_1", False)
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 64)
@@ -18,7 +19,7 @@ class Survival:
         self.player = Player((400, 300), self.bullets.append)
 
         self.shooting = pygame.USEREVENT + 1
-        pygame.time.set_timer( self.shooting, 50)
+        pygame.time.set_timer( self.shooting, 500)
 
         for _ in range(12):
             while True:
@@ -57,9 +58,16 @@ class Survival:
         if self.player:
             if is_key_pressed[pygame.K_RIGHT]:
                 self.player.rotate(clockwise=True)
+                self.display_scroll[0] += 5
             elif is_key_pressed[pygame.K_LEFT]:
                 self.player.rotate(clockwise=False)
-     
+                self.display_scroll[0] -= 5
+            elif is_key_pressed[pygame.K_UP]:
+                self.player.rotate(clockwise=False)
+                self.display_scroll[1] -= 5
+            elif is_key_pressed[pygame.K_DOWN]:
+                self.player.rotate(clockwise=False)
+                self.display_scroll[1] += 5
 
     def _get_game_object(self):
         games_objects = [*self.enemies, *self.bullets]
@@ -95,7 +103,7 @@ class Survival:
             self.message = "Houra!"
 
     def _draw(self):
-        self.screen.blit(self.background, (0, 0))
+        self.screen.blit(self.background, (0 - self.display_scroll[0], 0 - self.display_scroll[1]))
 
         for game_object in self._get_game_object():
             game_object.draw(self.screen)
