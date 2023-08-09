@@ -61,7 +61,7 @@ class Enemy(GameObject):
 class Bullet(GameObject):
     def __init__(self, position, velocity):
         self.direction = Vector2(UP)
-        super().__init__(position, load_sprite("water"), velocity)
+        super().__init__(position, load_sprite("fireball"), velocity)
 
     def move(self, surface):
         self.position = self.position + self.velocity

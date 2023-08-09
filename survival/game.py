@@ -19,9 +19,9 @@ class Survival:
         self.player = Player((400, 300), self.bullets.append)
 
         self.shooting = pygame.USEREVENT + 1
-        pygame.time.set_timer( self.shooting, 500)
+        pygame.time.set_timer( self.shooting, 50)
 
-        for _ in range(12):
+        for _ in range(200):
             while True:
                 position = get_random_position(self.screen)
                 if (
@@ -33,6 +33,7 @@ class Survival:
 
     def main_loop(self):
         while True:
+            self.screen.fill((24,164,86))
             self._handle_input()
             self._process_game_logic()
             self._draw()
@@ -84,8 +85,8 @@ class Survival:
         if self.player:
             for enemy in self.enemies:
                 if enemy.collides_with(self.player):
-                    self.player = None
-                    self.message = "Game Over!"
+                    # self.player = None
+                    # self.message = "Game Over!"
                     break
 
         for bullet in self.bullets[:]:
