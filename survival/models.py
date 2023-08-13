@@ -25,8 +25,8 @@ class GameObject:
     
 class Player(GameObject):
     MANEUVERABILITY = 3
-    ACCELERATION = 0.25
-    BULLET_SPEED = 3
+    ACCELERATION = 0.50
+    BULLET_SPEED = 5
 
     def __init__(self, position, create_bullet_callback):
         self.create_bullet_callback = create_bullet_callback
