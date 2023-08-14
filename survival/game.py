@@ -1,13 +1,17 @@
 import pygame
-
+from pygame.math import Vector2
 from models import Player, Enemy
 from utils import get_random_position, load_sprite, print_text
+import random
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
 class Survival:
     MIN_ENEMY_DISTANCE = 250
     def __init__(self):
         self._init_pygame()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.display_scroll = [0, 0]
         self.background = load_sprite("land_1", False)
         self.clock = pygame.time.Clock()
@@ -18,26 +22,41 @@ class Survival:
         self.bullets = []
         self.player = Player((400, 300), self.bullets.append)
 
-        self.shooting = pygame.USEREVENT + 1
-        pygame.time.set_timer( self.shooting, 50)
+        self.shooting_event = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.shooting_event, 50)
 
-        for _ in range(200):
-            while True:
-                position = get_random_position(self.screen)
-                if (
-                    position.distance_to(self.player.position)
-                    > self.MIN_ENEMY_DISTANCE
-                ):
-                    break
-            self.enemies.append(Enemy(position))
+    def _init_pygame(self):
+        pygame.init()
+        pygame.display.set_caption("Survival")
 
     def main_loop(self):
+        enemy_spawn_timer = pygame.time.get_ticks() 
+        
         while True:
             self.screen.fill((24,164,86))
             self._handle_input()
             self._process_game_logic()
             self._draw()
+             
+            # Check the time elapsed and generate enemies randomly
+            current_time = pygame.time.get_ticks()
+            if current_time - enemy_spawn_timer >= random.randint(1000, 2000):
+                self._generate_enemies_randomly()
+                enemy_spawn_timer = current_time  # Reset the timer
 
+    def _generate_enemies_randomly(self):
+        while True:
+            position = get_random_position(self.screen)
+            distance_to_player = position.distance_to(self.player.position)
+
+            if distance_to_player > self.MIN_ENEMY_DISTANCE:
+                break
+
+        enemy = Enemy(position, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        # enemy.move_towards_center()
+
+        self.enemies.append(enemy)
+            
     def _init_pygame(self):
         pygame.init()
         pygame.display.set_caption("Survival")
@@ -50,7 +69,7 @@ class Survival:
                 quit() 
             elif (
                 self.player
-                and event.type == self.shooting
+                and event.type == self.shooting_event
             ):
                 self.player.shoot()
 
@@ -80,7 +99,7 @@ class Survival:
     
     def _process_game_logic(self):
         for game_object in self._get_game_object():
-            game_object.move(self.screen)
+            game_object.move(self.screen)          
 
         if self.player:
             for enemy in self.enemies:
@@ -100,8 +119,6 @@ class Survival:
             if not self.screen.get_rect().collidepoint(bullet.position):
                 self.bullets.remove(bullet)
 
-        if not self.enemies and self.player:
-            self.message = "Houra!"
 
     def _draw(self):
         self.screen.blit(self.background, (0 - self.display_scroll[0], 0 - self.display_scroll[1]))
